@@ -12,19 +12,26 @@ menu = ["Introduction", "Regular Delivery Model", "Delayed Delivery Model", "Rea
 choice = st.sidebar.selectbox("Select Section", menu)
 
 # -------------------------
+# Helper: build sequences
+# -------------------------
+def build_sequence(N, pattern):
+    n = np.arange(N)
+    if pattern == "Constant (x[n]=1)":
+        x = np.ones(N)
+    else:
+        # Pulse/Periodic pattern: 1 every 3 steps -> 1,0,0,1,0,0,...
+        x = np.zeros(N)
+        x[::3] = 1
+    return n, x
+
+# -------------------------
 # Introduction
 # -------------------------
 if choice == "Introduction":
     st.header("Introduction")
     st.write("""
-    Efficient delivery scheduling is important in modern logistics.  
-    Delivery processes occur in step-by-step discrete stages.  
-    Z-Transforms are effective tools for analyzing such discrete-time systems.
-
-    This web app demonstrates:
-    - Regular (Periodic) Delivery Scheduling Model
-    - Delayed Delivery Scheduling Model
-    - Effect of delay using Z-Transform concept
+    This app models delivery schedules as discrete-time sequences and shows how delays affect them.
+    You can view a regular (on-time) schedule and a delayed schedule, and visualize the effect of delay.
     """)
 
 # -------------------------
@@ -33,21 +40,25 @@ if choice == "Introduction":
 elif choice == "Regular Delivery Model":
     st.header("Model 1: Regular (Periodic) Delivery Scheduling")
 
-    N = st.slider("Select number of time steps (N)", 10, 100, 20)
-    n = np.arange(N)
-    x = np.ones(N)
+    N = st.slider("Select number of time steps (N)", 10, 100, 30)
+    pattern = st.selectbox("Select pattern type", ["Constant (x[n]=1)", "Pulse / Periodic (1,0,0,...)"])
 
-    st.write("Discrete-time sequence: x[n] = 1 (constant delivery each time step)")
+    n, x = build_sequence(N, pattern)
+
+    if pattern == "Constant (x[n]=1)":
+        st.write("Discrete-time sequence: x[n] = 1 (constant delivery each time step)")
+    else:
+        st.write("Discrete-time sequence: Pulse/Periodic (delivery occurs at some time steps)")
 
     fig, ax = plt.subplots()
     ax.stem(n, x)
     ax.set_xlabel("n (time steps)")
-    ax.set_ylabel("x[n] (deliveries)")
+    ax.set_ylabel("Deliveries")
     ax.set_title("Regular Delivery Sequence")
     st.pyplot(fig)
 
     st.latex(r"X(z) = \sum_{n=0}^{\infty} x[n] z^{-n}")
-    st.write("Interpretation: The system is stable and represents planned, periodic delivery schedules.")
+    st.write("Interpretation: This shows the planned (on-time) delivery schedule.")
 
 # -------------------------
 # Delayed Delivery Model
@@ -55,12 +66,13 @@ elif choice == "Regular Delivery Model":
 elif choice == "Delayed Delivery Model":
     st.header("Model 2: Delayed Delivery Scheduling")
 
-    N = st.slider("Select number of time steps (N)", 10, 100, 20)
+    N = st.slider("Select number of time steps (N)", 10, 100, 30)
     k = st.slider("Select delay k", 0, 20, 3)
+    pattern = st.selectbox("Select pattern type", ["Constant (x[n]=1)", "Pulse / Periodic (1,0,0,...)"])
 
-    n = np.arange(N)
-    x = np.ones(N)
+    n, x = build_sequence(N, pattern)
 
+    # Build delayed sequence y[n] = x[n-k]
     y = np.zeros(N)
     if k < N:
         y[k:] = x[:N-k]
@@ -76,7 +88,7 @@ elif choice == "Delayed Delivery Model":
     st.pyplot(fig)
 
     st.latex(r"Y(z) = z^{-k} X(z)")
-    st.write("Interpretation: z^{-k} represents delay. Larger k means more delivery delay.")
+    st.write("Interpretation: Delay shifts the schedule in time by k steps without changing its shape.")
 
 # -------------------------
 # Real Data Demo
@@ -100,7 +112,7 @@ elif choice == "Real Data Demo":
             k = st.slider("Select delay k", 0, 50, 5)
 
             data = df[col].values
-            N = min(len(data), 200)  # limit for display
+            N = min(len(data), 200)
             x = data[:N]
 
             y = np.zeros(N)
@@ -124,4 +136,4 @@ elif choice == "Real Data Demo":
 # Footer
 # -------------------------
 st.markdown("---")
-st.write("@ Delivery Scheduling Analysis Using Z-Transforms")
+st.write("Developed for Applied Mathematics Project: Delivery Scheduling Analysis Using Z-Transforms")
