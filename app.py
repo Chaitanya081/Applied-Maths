@@ -20,7 +20,7 @@ if choice == "Introduction":
     Efficient delivery scheduling is important in modern logistics.  
     Delivery processes occur in step-by-step discrete stages.  
     Z-Transforms are effective tools for analyzing such discrete-time systems.
-    
+
     This web app demonstrates:
     - Regular (Periodic) Delivery Scheduling Model
     - Delayed Delivery Scheduling Model
@@ -40,7 +40,7 @@ elif choice == "Regular Delivery Model":
     st.write("Discrete-time sequence: x[n] = 1 (constant delivery each time step)")
 
     fig, ax = plt.subplots()
-    ax.stem(n, x, use_line_collection=True)
+    ax.stem(n, x)
     ax.set_xlabel("n (time steps)")
     ax.set_ylabel("x[n] (deliveries)")
     ax.set_title("Regular Delivery Sequence")
@@ -68,12 +68,11 @@ elif choice == "Delayed Delivery Model":
     st.write(f"Delayed sequence: y[n] = x[n - {k}]")
 
     fig, ax = plt.subplots()
-    ax.stem(n, x, linefmt='b-', markerfmt='bo', basefmt=" ", label="Original x[n]", use_line_collection=True)
-    ax.stem(n, y, linefmt='r-', markerfmt='ro', basefmt=" ", label="Delayed y[n]", use_line_collection=True)
+    ax.stem(n, x)
+    ax.stem(n, y)
     ax.set_xlabel("n (time steps)")
     ax.set_ylabel("Deliveries")
     ax.set_title("Original vs Delayed Delivery Sequence")
-    ax.legend()
     st.pyplot(fig)
 
     st.latex(r"Y(z) = z^{-k} X(z)")
