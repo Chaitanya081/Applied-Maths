@@ -124,4 +124,4 @@ elif choice == "Real Data Demo":
 # Footer
 # -------------------------
 st.markdown("---")
-st.write("Developed for Applied Mathematics Project: Delivery Scheduling Analysis Using Z-Transforms")
+st.write("@ Delivery Scheduling Analysis Using Z-Transforms")
