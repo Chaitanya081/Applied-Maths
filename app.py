@@ -50,11 +50,15 @@ elif choice == "Regular Delivery Model":
     else:
         st.write("Discrete-time sequence: Pulse/Periodic (delivery occurs at some time steps)")
 
-    fig, ax = plt.subplots()
-    ax.stem(n, x)
+    fig, ax = plt.subplots(figsize=(10, 4))
+    ax.step(n, x, where="mid", label="x[n] (Original)", linewidth=2)
+    ax.scatter(n, x)
     ax.set_xlabel("n (time steps)")
     ax.set_ylabel("Deliveries")
     ax.set_title("Regular Delivery Sequence")
+    ax.set_ylim(-0.2, 1.2)
+    ax.grid(True, linestyle="--", alpha=0.5)
+    ax.legend()
     st.pyplot(fig)
 
     st.latex(r"X(z) = \sum_{n=0}^{\infty} x[n] z^{-n}")
@@ -79,12 +83,19 @@ elif choice == "Delayed Delivery Model":
 
     st.write(f"Delayed sequence: y[n] = x[n - {k}]")
 
-    fig, ax = plt.subplots()
-    ax.stem(n, x)
-    ax.stem(n, y)
+    fig, ax = plt.subplots(figsize=(10, 4))
+    ax.step(n, x, where="mid", label="x[n] (Original)", linewidth=2)
+    ax.scatter(n, x)
+
+    ax.step(n, y, where="mid", label="y[n] (Delayed)", linewidth=2)
+    ax.scatter(n, y)
+
     ax.set_xlabel("n (time steps)")
     ax.set_ylabel("Deliveries")
     ax.set_title("Original vs Delayed Delivery Sequence")
+    ax.set_ylim(-0.2, 1.2)
+    ax.grid(True, linestyle="--", alpha=0.5)
+    ax.legend()
     st.pyplot(fig)
 
     st.latex(r"Y(z) = z^{-k} X(z)")
@@ -121,12 +132,13 @@ elif choice == "Real Data Demo":
 
             n = np.arange(N)
 
-            fig, ax = plt.subplots()
-            ax.plot(n, x, label="Original Sequence")
-            ax.plot(n, y, label="Delayed Sequence")
+            fig, ax = plt.subplots(figsize=(10, 4))
+            ax.plot(n, x, label="Original Sequence", linewidth=2)
+            ax.plot(n, y, label="Delayed Sequence", linewidth=2)
             ax.set_xlabel("n (time steps)")
             ax.set_ylabel(col)
             ax.set_title("Original vs Delayed Real Data Sequence")
+            ax.grid(True, linestyle="--", alpha=0.5)
             ax.legend()
             st.pyplot(fig)
 
